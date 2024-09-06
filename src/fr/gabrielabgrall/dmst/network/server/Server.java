@@ -20,12 +20,11 @@ public class Server extends Thread {
         setName("Server");
         this.port = port;
         this.serverSocket = new ServerSocket(port);
-
-
     }
 
     @Override
     public void run() {
+        Debug.log(this, "Server started. Listening to incoming connections...");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 handleNewClient(serverSocket.accept());
@@ -36,10 +35,16 @@ public class Server extends Thread {
     }
 
     protected void handleNewClient(Socket socket) {
-        ServerWorker serverWorker = new ServerWorker("Server-" + nextServerWorkerID, socket);
+        ServerWorker serverWorker = new ServerWorker("ServerWorker-" + nextServerWorkerID, socket);
         nextServerWorkerID++;
         serverWorkers.add(serverWorker);
         
-        Debug.Log(this, " New client connected to ", serverWorker, " from ", serverWorker.socket.getRemoteSocketAddress());
+        Debug.log(this, "New client connected to ", serverWorker.getName(), " from ", serverWorker.socket.getRemoteSocketAddress());
+        serverWorker.start();
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }
