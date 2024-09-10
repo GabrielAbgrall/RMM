@@ -24,27 +24,27 @@ public class Server extends Thread {
 
     @Override
     public void run() {
-        Debug.log(this, "Server started. Listening to incoming connections...");
+        Debug.log("Server started. Listening to incoming connections...");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 handleNewClient(serverSocket.accept());
             } catch (IOException e) {
-                e.printStackTrace();
+                Debug.log((Object) e.getStackTrace());
             }
         }
     }
 
     protected void handleNewClient(Socket socket) {
-        ServerWorker serverWorker = new ServerWorker("ServerWorker-" + nextServerWorkerID, socket);
-        nextServerWorkerID++;
-        serverWorkers.add(serverWorker);
-        
-        Debug.log(this, "New client connected to ", serverWorker.getName(), " from ", serverWorker.socket.getRemoteSocketAddress());
-        serverWorker.start();
-    }
-
-    @Override
-    public String toString() {
-        return getName();
+        ServerWorker serverWorker;
+        try {
+            serverWorker = new ServerWorker("ServerWorker-" + nextServerWorkerID, socket);
+            nextServerWorkerID++;
+            serverWorkers.add(serverWorker);
+            
+            Debug.log("New client connected to ", serverWorker.getName(), " from ", serverWorker.getSocket().getRemoteSocketAddress());
+            serverWorker.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
