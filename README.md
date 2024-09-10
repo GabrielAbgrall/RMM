@@ -1,4 +1,4 @@
-# Distant Management and Scripting Tool
+# Distant System Administration and Scripting Tool
 
 
 ### Objectif
