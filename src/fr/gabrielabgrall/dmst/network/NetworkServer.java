@@ -1,4 +1,4 @@
-package fr.gabrielabgrall.dmst.network.server;
+package fr.gabrielabgrall.dmst.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,15 +8,15 @@ import java.util.List;
 
 import fr.gabrielabgrall.dmst.utils.Debug;
 
-public class Server extends Thread {
+public class NetworkServer extends Thread {
 
     protected final int port;
     protected final ServerSocket serverSocket;
 
-    protected final List<ServerWorker> serverWorkers = new ArrayList<>();
+    protected final List<SocketHandler> serverWorkers = new ArrayList<>();
     protected int nextServerWorkerID = 0;
 
-    public Server(int port) throws IOException {
+    public NetworkServer(int port) throws IOException {
         setName("Server");
         this.port = port;
         this.serverSocket = new ServerSocket(port);
@@ -35,9 +35,9 @@ public class Server extends Thread {
     }
 
     protected void handleNewClient(Socket socket) {
-        ServerWorker serverWorker;
+        SocketHandler serverWorker;
         try {
-            serverWorker = new ServerWorker("ServerWorker-" + nextServerWorkerID, socket);
+            serverWorker = new SocketHandler("ServerWorker-" + nextServerWorkerID, socket);
             nextServerWorkerID++;
             serverWorkers.add(serverWorker);
             

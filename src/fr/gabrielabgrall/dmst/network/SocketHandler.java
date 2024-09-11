@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.gabrielabgrall.dmst.network.commands.AuthCommand;
 import fr.gabrielabgrall.dmst.utils.Debug;
 
 public class SocketHandler extends Thread {
@@ -28,8 +27,6 @@ public class SocketHandler extends Thread {
     public SocketHandler(String name, Socket socket) throws UnknownHostException, IOException {
         setName(name);
         this.socket = socket;
-
-        commands.put("AUTH", new AuthCommand(this));
     }
 
     @Override
@@ -61,12 +58,13 @@ public class SocketHandler extends Thread {
     }
 
     public void handleIncomingData(Socket socket, String data) {
-        String[] sd = data.split(ARGS_SEPARATOR); // Splitted Data
-        String command = sd[0];
+        String[] split = data.split(ARGS_SEPARATOR);
+        String command = split[0];
         Map<String, String> args = new HashMap<>();
-        for(String s : Arrays.copyOfRange(sd, 1, sd.length)) {
-            String k = s.split(" ")[0];
-            String v = s.substring(k.length(), s.length());
+        for(String arg : Arrays.copyOfRange(split, 1, split.length)) {
+            String k = arg.split(ENTRY_SEPARATOR)[0];
+            if(arg.length()<3 || k.length()==0) continue;
+            String v = arg.substring(k.length(), arg.length());
             args.put(k, v);
         }
         handleIncomingCommand(command, args);
