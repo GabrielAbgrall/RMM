@@ -58,6 +58,12 @@ public class DSAST {
             int port = Integer.parseInt(args[3]);
             Client client = new Client(name, host, port);
             client.start();
+
+            /*String c = "auth";
+            Map<String, String> a = new HashMap<>();
+            a.put("public_key", "thisisthetestpublickey");
+            a.put("private_key", "thisisthetestprivatekey");
+            client.sendCommand(c, a);*/
         } catch (Exception e) {
             e.printStackTrace();
         }
