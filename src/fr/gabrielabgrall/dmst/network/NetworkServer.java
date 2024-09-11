@@ -20,6 +20,7 @@ public class NetworkServer extends Thread {
         setName("Server");
         this.port = port;
         this.serverSocket = new ServerSocket(port);
+        start();
     }
 
     @Override
@@ -29,22 +30,22 @@ public class NetworkServer extends Thread {
             try {
                 handleNewClient(serverSocket.accept());
             } catch (IOException e) {
-                Debug.log((Object) e.getStackTrace());
+                e.printStackTrace();
             }
         }
     }
 
     protected void handleNewClient(Socket socket) {
         SocketHandler serverWorker;
-        try {
-            serverWorker = new SocketHandler("ServerWorker-" + nextServerWorkerID, socket);
-            nextServerWorkerID++;
-            serverWorkers.add(serverWorker);
-            
-            Debug.log("New client connected to ", serverWorker.getName(), " from ", serverWorker.getSocket().getRemoteSocketAddress());
-            serverWorker.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serverWorker = new SocketHandler("ServerWorker-" + nextServerWorkerID, socket);
+        nextServerWorkerID++;
+        serverWorkers.add(serverWorker);
+        
+        Debug.log("New client connected to ", serverWorker.getName(), " from ", serverWorker.getSocket().getRemoteSocketAddress());
+        serverWorker.start();
+    }
+
+    public List<SocketHandler> getServerWorkers() {
+        return serverWorkers;
     }
 }

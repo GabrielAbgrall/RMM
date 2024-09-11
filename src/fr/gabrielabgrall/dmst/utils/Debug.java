@@ -3,14 +3,18 @@ package fr.gabrielabgrall.dmst.utils;
 public class Debug {
 
     protected static boolean debug = false;
+    
+    public static void setDebug(boolean debug) {
+        Debug.debug = debug;
+    }
 
     public static void log(Object... data) {
         if(!debug) return;
         print(data);
     }
 
-    public static void setDebug(boolean debug) {
-        Debug.debug = debug;
+    public static void error(Object... data) {
+        print(data);
     }
 
     public static void print(Object... data) {
