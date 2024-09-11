@@ -9,14 +9,18 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import fr.gabrielabgrall.dmst.utils.Debug;
 
 public class SocketHandler extends Thread {
 
     public final static String VERSION = "0.1";
+    public final static String ENTRY_SEPARATOR = " ";
     public final static String ARGS_SEPARATOR = "\n";
     public final static String END_STATEMENT = "\r\n";
+    protected Map<String, CommandHandler> commands = new HashMap<>();
 
     protected final Socket socket;
 
@@ -54,20 +58,35 @@ public class SocketHandler extends Thread {
     }
 
     public void handleIncomingData(Socket socket, String data) {
-        String[] sd = data.split(ARGS_SEPARATOR); // Splitted Data
-        String command = sd[0];
-        String[] args = Arrays.copyOfRange(sd, 1, sd.length);
+        String[] split = data.split(ARGS_SEPARATOR);
+        String command = split[0];
+        Map<String, String> args = new HashMap<>();
+        for(String arg : Arrays.copyOfRange(split, 1, split.length)) {
+            String k = arg.split(ENTRY_SEPARATOR)[0];
+            if(arg.length()<3 || k.length()==0) continue;
+            String v = arg.substring(k.length(), arg.length());
+            args.put(k, v);
+        }
         handleIncomingCommand(command, args);
     }
 
-    public void handleIncomingCommand(String command, String[] args){
-        Debug.log("Incoming data from ", socket.getRemoteSocketAddress(), ": ", command, " ", args);
+    public void handleIncomingCommand(String command, Map<String, String> args) {
+        if(commands.containsKey(command)) commands.get(command).handleCommand(command, args);
+        else Debug.log("Unknown command received from ", socket.getRemoteSocketAddress(), ": " + command);;
     }
 
     public void sendData(String data) throws IOException {
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         out.write(data + END_STATEMENT);
         out.flush();
+    }
+
+    public void sendCommand(String command, Map<String, String> args) throws IOException {
+        String data = command.toUpperCase();
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            data += ARGS_SEPARATOR + entry.getKey() + ENTRY_SEPARATOR + entry.getValue();
+        }
+        sendData(data);
     }
 
     public Socket getSocket() {
