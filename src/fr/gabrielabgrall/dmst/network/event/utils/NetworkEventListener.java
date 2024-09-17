@@ -1,4 +1,4 @@
-package fr.gabrielabgrall.dmst.network.event;
+package fr.gabrielabgrall.dmst.network.event.utils;
 
 import java.util.EventListener;
 

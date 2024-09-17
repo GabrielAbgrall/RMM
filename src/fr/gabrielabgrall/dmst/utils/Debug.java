@@ -22,6 +22,6 @@ public class Debug {
         for (Object d : data) {
             s.append(d);   
         }
-        System.out.printf("%ty-%<tm-%<tj %<tH-%<tM-%<tS | %17s | %s\n", System.currentTimeMillis(), Thread.currentThread().getName(), s.toString());
+        System.out.printf("%ty-%<tm-%<tj %<tH-%<tM-%<tS | %s | %s\n", System.currentTimeMillis(), Thread.currentThread().getName(), s.toString());
     }
 }

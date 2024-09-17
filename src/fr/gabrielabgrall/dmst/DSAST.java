@@ -3,8 +3,8 @@ package fr.gabrielabgrall.dmst;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.gabrielabgrall.dmst.app.client.Client;
-import fr.gabrielabgrall.dmst.app.server.Server;
+import fr.gabrielabgrall.dmst.app.client.ClientApp;
+import fr.gabrielabgrall.dmst.app.server.ServerApp;
 import fr.gabrielabgrall.dmst.utils.Debug;
 
 public class DSAST {
@@ -38,15 +38,14 @@ public class DSAST {
 
         if(args.containsKey("server")) {
             if(port == -1) throw new InvalidArgumentException("Invalid or missing port number.");
-            Server server = new Server(port);
-            server.start();
+            new ServerApp(port);
         }
 
         if(args.containsKey("client")) {
             if(port == -1) throw new InvalidArgumentException("Invalid or missing port number.");
             if(name == null) throw new InvalidArgumentException("Invalid or missing name.");
             if(host == null) throw new InvalidArgumentException("Invalid or missing host name or address.");
-            Client client = new Client(name, host, port);
+            ClientApp client = new ClientApp(name, host, port);
             client.start();
         }
     }
