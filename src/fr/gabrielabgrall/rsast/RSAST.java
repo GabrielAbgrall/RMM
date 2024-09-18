@@ -41,12 +41,15 @@ public class RSAST {
             new ServerApp(port);
         }
 
-        if(args.containsKey("client")) {
+        else if(args.containsKey("client")) {
             if(port == -1) throw new InvalidArgumentException("Invalid or missing port number.");
             if(name == null) throw new InvalidArgumentException("Invalid or missing name.");
             if(host == null) throw new InvalidArgumentException("Invalid or missing host name or address.");
-            ClientApp client = new ClientApp(name, host, port);
-            client.start();
+            new ClientApp(name, host, port);
+        }
+
+        else {
+            throw new IllegalArgumentException("Application type missing.");
         }
     }
 
