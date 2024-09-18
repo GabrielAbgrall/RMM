@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import fr.gabrielabgrall.rsast.network.command.Command;
+import fr.gabrielabgrall.rsast.network.command.DisconnectCommand;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.command.CommandReceivedEvent;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.DisconnectionEvent;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.LostConnectionEvent;
@@ -27,7 +28,7 @@ public class SocketHandler extends Thread {
         setName(name);
         this.socket = socket;
         this.eventManager = new NetworkEventManager();
-        this.connected = socket != null && socket.isConnected() && !socket.isClosed();
+        this.connected = socket!=null && socket.isConnected() && !socket.isClosed();
         
         eventManager.registerInternalListener(new InternalListener());
     }
@@ -38,8 +39,12 @@ public class SocketHandler extends Thread {
     }
 
     public void disconnect() {
+        disconnect(null);
+    }
+
+    public void disconnect(String message) {
         if(!isConnected()) return;
-        sendCommand(new Command("!DISCONNECT"));
+        sendCommand(new DisconnectCommand((message==null ? "Disconnected by server" : message)));
         closeSocket();
         eventManager.triggerEvent(new DisconnectionEvent(this));
     }
