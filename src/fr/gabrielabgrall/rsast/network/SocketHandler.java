@@ -83,8 +83,7 @@ public class SocketHandler extends Thread {
     }
 
     public void handleIncomingData(Socket socket, String data) {
-        Command command = new Command(data);
-        handleIncomingCommand(command);
+        handleIncomingCommand(new Command(data));
     }
 
     public void handleIncomingCommand(Command command) {

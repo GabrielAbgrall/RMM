@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.gabrielabgrall.rsast.network.exception.MalformedCommandException;
-
 public class Command {
 
     public final static String INTERNAL_COMMAND_PREFIX = "!";
@@ -20,27 +18,16 @@ public class Command {
         for (String arg : args) {
             sb.append(ARGS_SEPARATOR).append(arg);
         }
-        try {
-            buildCommand(commandHeader + sb.toString());
-        } catch (MalformedCommandException e) {
-            e.printStackTrace();
-        }
+        buildCommand(commandHeader + sb.toString());
     }
 
     public Command(String raw) {
-        try {
-            buildCommand(raw);
-        } catch(MalformedCommandException e) {
-            e.printStackTrace();
-        }
+        buildCommand(raw);
     }
 
-    protected void buildCommand(String raw) throws MalformedCommandException {
+    protected void buildCommand(String raw) {
         String[] split = raw.split(ARGS_SEPARATOR);
-
         this.commandHeader = split[0].toUpperCase();
-        if(this.commandHeader.length()==0) throw new MalformedCommandException();
-
         buildArgs(Arrays.copyOfRange(split, 1, split.length));
     }
 
