@@ -3,12 +3,13 @@ package fr.gabrielabgrall.rsast.network;
 import java.io.IOException;
 import java.net.Socket;
 
-import fr.gabrielabgrall.rsast.network.event.socket.ConnectionEvent;
+import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.ConnectionEvent;
 
 public class Client extends SocketHandler {
 
     protected String host;
     protected int port;
+    protected boolean tryReconnect = true;
 
     public Client(String name, String host, int port) {
         super(name, null);
@@ -22,7 +23,7 @@ public class Client extends SocketHandler {
         while (!interrupted()) {
             if(!isConnected()) {
                 try {
-                    if(connect()) continue;
+                    if(tryReconnect && connect()) continue;
                     Thread.sleep(RECONNECT_INTERVAL);
                 } catch (InterruptedException e) {
                     interrupt();
@@ -34,13 +35,21 @@ public class Client extends SocketHandler {
     }
     
     public boolean connect() {
+        tryReconnect = true;
         if(isConnected()) return true;
         try {
             this.socket = new Socket(host, port);
-            eventManager.triggerEvent(new ConnectionEvent(socket));
+            eventManager.triggerEvent(new ConnectionEvent(this));
+            setConnected(true);
             return true;
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @Override
+    public void disconnect() {
+        tryReconnect = false;
+        super.disconnect();
     }
 }

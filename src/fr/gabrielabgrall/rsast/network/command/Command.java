@@ -8,6 +8,7 @@ import fr.gabrielabgrall.rsast.network.exception.MalformedCommandException;
 
 public class Command {
 
+    public final static String INTERNAL_COMMAND_PREFIX = "!";
     public final static String ENTRY_SEPARATOR = " ";
     public final static String ARGS_SEPARATOR = "\n";
 
@@ -26,7 +27,7 @@ public class Command {
         }
     }
 
-    protected Command(String raw) {
+    public Command(String raw) {
         try {
             buildCommand(raw);
         } catch(MalformedCommandException e) {

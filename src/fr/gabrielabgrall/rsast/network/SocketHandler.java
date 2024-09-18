@@ -8,9 +8,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import fr.gabrielabgrall.rsast.network.command.Command;
-import fr.gabrielabgrall.rsast.network.event.command.CommandReceivedEvent;
-import fr.gabrielabgrall.rsast.network.event.socket.DisconnectionEvent;
-import fr.gabrielabgrall.rsast.network.event.socket.LostConnectionEvent;
+import fr.gabrielabgrall.rsast.network.event.sockethandler.command.CommandReceivedEvent;
+import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.DisconnectionEvent;
+import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.LostConnectionEvent;
 import fr.gabrielabgrall.rsast.network.event.utils.NetworkEventManager;
 
 public class SocketHandler extends Thread {
@@ -21,11 +21,15 @@ public class SocketHandler extends Thread {
 
     protected NetworkEventManager eventManager;
     protected Socket socket;
+    protected boolean connected;
 
     public SocketHandler(String name, Socket socket) {
         setName(name);
         this.socket = socket;
         this.eventManager = new NetworkEventManager();
+        this.connected = socket != null && socket.isConnected() && !socket.isClosed();
+        
+        eventManager.registerInternalListener(new InternalListener());
     }
 
     @Override
@@ -35,11 +39,13 @@ public class SocketHandler extends Thread {
 
     public void disconnect() {
         if(!isConnected()) return;
+        sendCommand(new Command("!DISCONNECT"));
         closeSocket();
-        eventManager.triggerEvent(new DisconnectionEvent(socket));
+        eventManager.triggerEvent(new DisconnectionEvent(this));
     }
 
     protected void closeSocket() {
+        setConnected(false);
         try {
             this.socket.close();
         } catch (IOException e) {
@@ -48,7 +54,11 @@ public class SocketHandler extends Thread {
     }
 
     public boolean isConnected() {
-        return this.socket != null && this.socket.isConnected() && !this.socket.isClosed();
+        return connected;
+    }
+
+    protected void setConnected(boolean connected) {
+        this.connected = connected;
     }
     
     public void listen() {
@@ -68,8 +78,7 @@ public class SocketHandler extends Thread {
                 }
             }
         } catch (IOException e) {
-            closeSocket();
-            eventManager.triggerEvent(new LostConnectionEvent(socket));
+            lostConnection();
         }
     }
 
@@ -79,7 +88,12 @@ public class SocketHandler extends Thread {
     }
 
     public void handleIncomingCommand(Command command) {
-        eventManager.triggerEvent(new CommandReceivedEvent(this, command));
+        CommandReceivedEvent e = new CommandReceivedEvent(this, command);
+        if(command.getCommandHeader().startsWith(Command.INTERNAL_COMMAND_PREFIX)) {
+            eventManager.triggerInternalEvent(e);
+        } else {
+            eventManager.triggerEvent(e);
+        }
     }
 
     public void sendData(String data) {
@@ -89,8 +103,14 @@ public class SocketHandler extends Thread {
             out.write(data + END_STATEMENT);
             out.flush();
         } catch (IOException e) {
-            closeSocket();
-            eventManager.triggerEvent(new LostConnectionEvent(socket));
+            lostConnection();
+        }
+    }
+
+    protected void lostConnection() {
+        if(isConnected()) {
+            eventManager.triggerEvent(new LostConnectionEvent(this));
+            setConnected(false);
         }
     }
 
