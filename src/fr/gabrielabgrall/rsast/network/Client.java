@@ -52,4 +52,8 @@ public class Client extends SocketHandler {
         tryReconnect = false;
         super.disconnect();
     }
+
+    public void setTryReconnect(boolean tryReconnect) {
+        this.tryReconnect = tryReconnect;
+    }
 }

@@ -15,7 +15,7 @@ public class InternalListener implements NetworkEventListener {
         switch (e.getCommand().getCommandHeader()) {
             case "!DISCONNECT":
                 e.getSocketHandler().closeSocket();
-                e.getSocketHandler().getEventManager().triggerEvent(new DisconnectionEvent(e.getSocketHandler()));
+                e.getSocketHandler().getEventManager().triggerEvent(new DisconnectionEvent(e.getSocketHandler(), e.getCommand().getArgs().get("message")));
                 break;
         
             default:

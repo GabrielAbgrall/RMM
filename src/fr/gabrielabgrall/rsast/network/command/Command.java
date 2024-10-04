@@ -37,7 +37,8 @@ public class Command {
             arg = arg.trim();
             String k = arg.split(ENTRY_SEPARATOR)[0];
             if(k.length()==0) continue; // Skip empty line
-            String v = arg.substring(k.length(), arg.length());
+            String v = null;
+            if(arg.length() > k.length()+1) v = arg.substring(k.length()+1, arg.length());
             args.put(k, v);
         }
     }

@@ -44,9 +44,11 @@ public class SocketHandler extends Thread {
 
     public void disconnect(String message) {
         if(!isConnected()) return;
-        sendCommand(new DisconnectCommand((message==null ? "Disconnected by server" : message)));
+        message = (message==null ? "Disconnected by server" : message);
+        DisconnectCommand cmd = new DisconnectCommand(message);
+        sendCommand(cmd);
         closeSocket();
-        eventManager.triggerEvent(new DisconnectionEvent(this));
+        eventManager.triggerEvent(new DisconnectionEvent(this, message));
     }
 
     protected void closeSocket() {
@@ -119,6 +121,7 @@ public class SocketHandler extends Thread {
     }
 
     public void sendCommand(Command command) {
+        if(!isConnected()) return;
         sendData(command.toString());
     }
 

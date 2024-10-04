@@ -4,8 +4,14 @@ import fr.gabrielabgrall.rsast.network.SocketHandler;
 
 public class DisconnectionEvent extends SocketEvent {
 
-    public DisconnectionEvent(SocketHandler socketHandler) {
+    protected String message;
+
+    public DisconnectionEvent(SocketHandler socketHandler, String message) {
         super(socketHandler);
+        this.message = message;
     }
-    
+
+    public String getMessage() {
+        return message;
+    }
 }
