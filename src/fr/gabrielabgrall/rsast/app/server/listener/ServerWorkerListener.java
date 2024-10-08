@@ -3,6 +3,7 @@ package fr.gabrielabgrall.rsast.app.server.listener;
 import fr.gabrielabgrall.rsast.InvalidArgumentException;
 import fr.gabrielabgrall.rsast.app.server.ServerApp;
 import fr.gabrielabgrall.rsast.command.AuthCommand;
+import fr.gabrielabgrall.rsast.network.ServerWorker;
 import fr.gabrielabgrall.rsast.network.command.Command;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.command.CommandReceivedEvent;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.ConnectionEvent;
@@ -12,11 +13,11 @@ import fr.gabrielabgrall.rsast.network.event.utils.NetworkEventHandler;
 import fr.gabrielabgrall.rsast.network.event.utils.NetworkEventListener;
 import fr.gabrielabgrall.rsast.utils.Debug;
 
-public class SocketWorkerListener implements NetworkEventListener {
+public class ServerWorkerListener implements NetworkEventListener {
 
     protected final ServerApp serverApp;
     
-    public SocketWorkerListener(ServerApp serverApp) {
+    public ServerWorkerListener(ServerApp serverApp) {
         this.serverApp = serverApp;
     }
 
@@ -40,10 +41,19 @@ public class SocketWorkerListener implements NetworkEventListener {
         if(!e.getCommand().getCommandHeader().equals("AUTH")) return;
         try {
             AuthCommand command = new AuthCommand(e.getCommand());
-            if(!command.getArgs().get("password").equals("bonjour")) e.getSocketHandler().disconnect("Invalid credentials");
-            if(!serverApp.checkVersion(command.getArgs().get("version"))) e.getSocketHandler().disconnect("Invalid version");
-            e.getSocketHandler().setName(e.getCommand().getArgs().get("login"));
-            e.getSocketHandler().sendCommand(new Command("AUTH_ACK"));
+            if(!serverApp.checkVersion(command.getArgs().get("version"))) {
+                e.getSocketHandler().disconnect("Invalid version");
+                return;
+            }
+            if(!serverApp.registerAuthenticatedWorker(
+                (ServerWorker)e.getSocketHandler(),
+                command.getLogin(),
+                command.getPassword()
+            )) {
+                e.getSocketHandler().disconnect("Authentication failed");
+                return;
+            }
+            e.getSocketHandler().sendCommand(new Command("AUTH_ACK"));            
         } catch (InvalidArgumentException err) {
             e.getSocketHandler().disconnect(err.getMessage());
         }

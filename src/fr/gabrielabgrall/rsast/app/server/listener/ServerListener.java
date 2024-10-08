@@ -17,7 +17,7 @@ public class ServerListener implements NetworkEventListener {
 
     @NetworkEventHandler
     public void onIncomingClient(IncomingClientEvent e) {
-        e.getServerWorker().getEventManager().registerListener(new SocketWorkerListener(serverApp));
+        e.getServerWorker().getEventManager().registerListener(new ServerWorkerListener(serverApp));
         Debug.log("New client connected on ", e.getServerWorker().getName(), " from ", e.getServerWorker().getSocket().getRemoteSocketAddress());
     }
 

@@ -1,5 +1,6 @@
 package fr.gabrielabgrall.rsast.app.client;
 
+import fr.gabrielabgrall.rsast.app.client.listener.ClientListener;
 import fr.gabrielabgrall.rsast.network.Client;
 import fr.gabrielabgrall.rsast.utils.Debug;
 

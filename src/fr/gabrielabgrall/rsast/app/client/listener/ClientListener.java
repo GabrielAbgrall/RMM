@@ -1,5 +1,6 @@
-package fr.gabrielabgrall.rsast.app.client;
+package fr.gabrielabgrall.rsast.app.client.listener;
 
+import fr.gabrielabgrall.rsast.app.client.ClientApp;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.command.CommandReceivedEvent;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.ConnectionEvent;
 import fr.gabrielabgrall.rsast.network.event.sockethandler.socket.DisconnectionEvent;

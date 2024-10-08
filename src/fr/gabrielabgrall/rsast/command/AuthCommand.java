@@ -16,4 +16,16 @@ public class AuthCommand extends Command {
             if(!command.getArgs().containsKey(a)) throw new InvalidArgumentException("Missing arguments");
         }
     }
+
+    public String getLogin() {
+        return getArgs().get("login");
+    }
+
+    public String getPassword() {
+        return getArgs().get("password");
+    }
+
+    public String getVersion() {
+        return getArgs().get("version");
+    }
 }
