@@ -7,7 +7,7 @@ import fr.gabrielabgrall.rmm.app.client.ClientApp;
 import fr.gabrielabgrall.rmm.app.server.ServerApp;
 import fr.gabrielabgrall.rmm.utils.Debug;
 
-public class RSAST {
+public class RMM {
 
     protected static final Map<String, String> ALIASES = new HashMap<>();
     
