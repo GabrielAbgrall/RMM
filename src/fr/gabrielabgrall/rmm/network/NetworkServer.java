@@ -1,4 +1,4 @@
-package fr.gabrielabgrall.dmst.network;
+package fr.gabrielabgrall.rmm.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.gabrielabgrall.dmst.utils.Debug;
+import fr.gabrielabgrall.rmm.utils.Debug;
 
 public class NetworkServer extends Thread {
 

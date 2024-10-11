@@ -1,4 +1,4 @@
-package fr.gabrielabgrall.dmst.network;
+package fr.gabrielabgrall.rmm.network;
 
 import java.util.Map;
 

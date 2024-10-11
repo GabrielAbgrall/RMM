@@ -1,4 +1,4 @@
-package fr.gabrielabgrall.dmst.network;
+package fr.gabrielabgrall.rmm.network;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.gabrielabgrall.dmst.utils.Debug;
+import fr.gabrielabgrall.rmm.utils.Debug;
 
 public class SocketHandler extends Thread {
 

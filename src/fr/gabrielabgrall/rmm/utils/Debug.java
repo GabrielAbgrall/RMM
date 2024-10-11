@@ -1,4 +1,4 @@
-package fr.gabrielabgrall.dmst.utils;
+package fr.gabrielabgrall.rmm.utils;
 
 public class Debug {
 
