@@ -38,4 +38,9 @@ public class ClientListener implements NetworkEventListener {
         if(!e.getCommand().getCommandHeader().equals("AUTH_ACK")) return;
         clientApp.setAuthenticated(true);
     }
+
+    @NetworkEventHandler
+    public void onCommandReceived(CommandReceivedEvent e) {
+        Debug.log("Command received :\n", e.getCommand().toString());
+    }
 }

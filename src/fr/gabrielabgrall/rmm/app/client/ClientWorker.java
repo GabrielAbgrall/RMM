@@ -18,7 +18,7 @@ public class ClientWorker extends Thread {
     @Override
     public void run() {
         while (!clientApp.isAuthenticated()) {
-            client.sendCommand(new AuthCommand(client.getName(), "bonjour", ClientApp.VERSION));
+            client.sendCommand(new AuthCommand(client.getName(), "motdepasseincorrect", ClientApp.VERSION));
             try {
                 sleep(1000);
             } catch (InterruptedException e) {

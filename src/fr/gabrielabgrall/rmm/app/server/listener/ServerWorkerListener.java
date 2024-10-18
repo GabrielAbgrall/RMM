@@ -58,4 +58,9 @@ public class ServerWorkerListener implements NetworkEventListener {
             e.getSocketHandler().disconnect(err.getMessage());
         }
     }
+
+    @NetworkEventHandler
+    public void onCommandReceived(CommandReceivedEvent e) {
+        Debug.log("Command received :\n", e.getCommand().toString());
+    }
 }
