@@ -9,14 +9,14 @@ import java.util.Map;
 import fr.gabrielabgrall.rmm.app.server.listener.ServerListener;
 import fr.gabrielabgrall.rmm.network.Server;
 import fr.gabrielabgrall.rmm.network.ServerWorker;
+import fr.gabrielabgrall.rmm.network.SocketHandler;
 import fr.gabrielabgrall.rmm.utils.Debug;
 
 public class ServerApp {
-
-    public static final String VERSION = "0.1";
     
     protected Server server;
     protected Map<String, AuthenticatedWorker> authenticatedWorkers = new HashMap<>();
+    protected Map<SocketHandler, String> subscribeMap = new HashMap<>();
 
     public ServerApp(int port) {
         try {
@@ -31,15 +31,20 @@ public class ServerApp {
     }
 
     public boolean checkVersion(String version) {
-        return VERSION.split("\\.")[0].equals(version.split("\\.")[0]);
+        return SocketHandler.VERSION.split("\\.")[0].equals(version.split("\\.")[0]);
     }
 
-    public boolean registerAuthenticatedWorker(ServerWorker serverWorker, String login, String password) {
-        if(!password.equals("bonjour")) return false;
+    public AuthenticatedWorker registerAuthenticatedWorker(ServerWorker serverWorker, String login, String password) {
+        if(!password.equals("bonjour")) return null;
+        AuthenticatedWorker worker = new AuthenticatedWorker(serverWorker, login);
         serverWorker.setName(login);
-        authenticatedWorkers.put(login, new AuthenticatedWorker(serverWorker, login));
+        authenticatedWorkers.put(login, worker);
         Debug.log("ServerWorker authenticated");
-        return true;
+        return worker;
+    }
+
+    public void removeAuthenticatedWorker(AuthenticatedWorker worker) {
+        if(authenticatedWorkers.containsKey(worker.login)) authenticatedWorkers.remove(worker.login);
     }
 
     public Map<String, AuthenticatedWorker> getAuthenticatedWorkers() {
@@ -56,9 +61,15 @@ public class ServerApp {
         return cp;
     }
 
-    public List<AuthenticatedWorker> getAuthServerWorkersSortedByErrorCount() {
-        List<AuthenticatedWorker> cp = List.copyOf(authenticatedWorkers.values());
-        cp.sort(Comparator.comparingInt(AuthenticatedWorker::getErrorCount));
-        return cp;
+    public void subscribe(SocketHandler socketHandler, String client) {
+        subscribeMap.put(socketHandler, client);
+    }
+
+    public void unsubscribe(SocketHandler socketHandler) {
+        subscribeMap.put(socketHandler, null);
+    }
+
+    public Map<SocketHandler, String> getSubscribeMap() {
+        return subscribeMap;
     }
 }

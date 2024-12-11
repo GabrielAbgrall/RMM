@@ -6,12 +6,10 @@ public class AuthenticatedWorker {
 
     protected ServerWorker serverWorker;
     protected String login;
-    protected int errorCount;
 
     public AuthenticatedWorker(ServerWorker serverWorker, String login) {
         this.serverWorker = serverWorker;
         this.login = login;
-        this.errorCount = 0;
     }
 
     public ServerWorker getServerWorker() {
@@ -22,7 +20,8 @@ public class AuthenticatedWorker {
         return login;
     }
 
-    public int getErrorCount() {
-        return errorCount;
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof AuthenticatedWorker && ((AuthenticatedWorker)obj).login.equals(this.login);
     }
 }

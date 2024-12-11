@@ -11,10 +11,7 @@ public class AuthCommand extends Command {
 
     public AuthCommand(Command command) throws InvalidArgumentException {
         super(command.toString());
-        String[] args = new String[]{"login", "password", "version"};
-        for (String a : args) {
-            if(!command.getArgs().containsKey(a)) throw new InvalidArgumentException("Missing arguments");
-        }
+        checkForArgs("login", "password", "version");
     }
 
     public String getLogin() {

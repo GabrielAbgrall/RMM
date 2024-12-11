@@ -31,6 +31,7 @@ public class ClientListener implements NetworkEventListener {
     @NetworkEventHandler
     public void onConnectionLost(LostConnectionEvent e) {
         Debug.log("Lost connection to remote ", e.getSocket().getRemoteSocketAddress());
+        clientApp.setAuthenticated(false);
     }
 
     @NetworkEventHandler
@@ -39,8 +40,8 @@ public class ClientListener implements NetworkEventListener {
         clientApp.setAuthenticated(true);
     }
 
-    @NetworkEventHandler
+    /*@NetworkEventHandler
     public void onCommandReceived(CommandReceivedEvent e) {
         Debug.log("Command received :\n", e.getCommand().toString());
-    }
+    }*/
 }

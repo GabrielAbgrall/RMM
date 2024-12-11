@@ -5,8 +5,6 @@ import fr.gabrielabgrall.rmm.network.Client;
 import fr.gabrielabgrall.rmm.utils.Debug;
 
 public class ClientApp {
-
-    public static final String VERSION = "0.1";
     
     protected Client client;
     protected boolean isAuthenticated = false;

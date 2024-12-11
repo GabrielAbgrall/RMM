@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.gabrielabgrall.rmm.InvalidArgumentException;
+
 public class Command {
 
     public final static String INTERNAL_COMMAND_PREFIX = "!";
@@ -58,5 +60,11 @@ public class Command {
             raw += ARGS_SEPARATOR + entry.getKey() + ENTRY_SEPARATOR + entry.getValue();
         }
         return raw;
+    }
+
+    public void checkForArgs(String... args) throws InvalidArgumentException {
+        for (String a : args) {
+            if(!this.getArgs().containsKey(a)) throw new InvalidArgumentException("Missing arguments");
+        }
     }
 }

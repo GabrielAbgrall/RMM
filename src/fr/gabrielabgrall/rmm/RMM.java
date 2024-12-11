@@ -5,6 +5,7 @@ import java.util.Map;
 
 import fr.gabrielabgrall.rmm.app.client.ClientApp;
 import fr.gabrielabgrall.rmm.app.server.ServerApp;
+import fr.gabrielabgrall.rmm.app.userinterface.UserInterface;
 import fr.gabrielabgrall.rmm.utils.Debug;
 
 public class RMM {
@@ -49,7 +50,7 @@ public class RMM {
         }
 
         else {
-            throw new IllegalArgumentException("Application type missing.");
+            new UserInterface();
         }
     }
 
